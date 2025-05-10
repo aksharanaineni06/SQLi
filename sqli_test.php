@@ -1,4 +1,6 @@
 <?php
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 // Connect to the database using MAMP credentials
 $host = 'localhost';
 $user = 'root';
@@ -15,9 +17,20 @@ if ($conn->connect_error) {
 // Get user input
 $id = $_GET['id'] ?? '';
 
-// ❌ Vulnerable to SQL injection
-$query = "SELECT * FROM users WHERE id = '$id'";
-$result = $conn->query($query);
+// Vulnerable to SQL injection
+//$query = "SELECT * FROM users WHERE id = '$id'";
+//$result = $conn->query($query);
+
+if (!is_numeric($id)) {
+    echo "<p>Invalid input</p>";
+    exit;
+}
+
+// Secure with prepared statement
+$stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+$stmt->bind_param("i", $id); // "i" means integer
+$stmt->execute();
+$result = $stmt->get_result();
 
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_row()) {

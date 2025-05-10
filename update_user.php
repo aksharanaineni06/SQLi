@@ -13,9 +13,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['username'] ?? '';
     $id = $_POST['id'] ?? '';
 
-    // vulnerable update
+    /*// vulnerable update
     $query = "UPDATE users SET username = '$name' WHERE id = '$id'";
+    echo "<p>Query being run: $query</p>";
+
     $conn->query($query);
+    */
+
+    // Secure version
+    if (!is_numeric($id)) {
+        echo "<p>Invalid ID input</p>";
+        exit;
+    }
+
+    // Use prepared statement to prevent SQL injection
+    $stmt = $conn->prepare("UPDATE users SET username = ? WHERE id = ?");
+    $stmt->bind_param("si", $name, $id);
+    $stmt->execute();
 
     echo "<p>Updated.</p>";
 }
