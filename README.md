@@ -35,6 +35,22 @@ View users: http://localhost:8888/sqli_test.php?id=1
 Update user: http://localhost:8888/update_user.php
 Login form: http://localhost:8888/login.php
 
+Testing with SQLMap
+You can test the endpoints using SQLMap, an automated tool for SQL injection detection.
+
+Example SQLMap commands:
+# Testing GET-based injection
+python3 sqlmap.py -u "http://localhost:8888/sqli_test.php?id=1" --batch --dbs
+
+# Testing POST-based injection (update_user.php)
+python3 sqlmap.py -u "http://localhost:8888/update_user.php" --data="id=2&username=test" --batch --dbs
+
+# Testing POST-based injection (login.php)
+python3 sqlmap.py -u "http://localhost:8888/login.php" --data="username=admin&password=admin123" --batch --dbs
+
+# Testing stacked queries (stacked_test.php)
+python3 sqlmap.py -u "http://localhost:8888/stacked_test.php?id=1" --batch --level=3 --risk=3 --technique=S
+
 
 Educational Purpose
 This project is intended for educational and academic demonstration of:
