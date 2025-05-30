@@ -18,7 +18,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo "<p>Query being run: $query</p>";
 
     $conn->query($query);
-    */
+
+    $result = $conn->query("SELECT username FROM users WHERE id = '$id'");
+    $row = $result->fetch_row();
+    
+    echo "<p>Username now: " . htmlspecialchars($row[0]) . "</p>";*/
+
+    // Input validation
+    if (!ctype_digit($id)) {
+        echo "<p>Invalid ID: must be numeric.</p>";
+        exit;
+    }
+    if (strlen($name) > 100) {
+        echo "<p>Invalid username: too long.</p>";
+        exit;
+    }*/
 
     // Secure version
     if (!is_numeric($id)) {
@@ -31,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("si", $name, $id);
     $stmt->execute();
 
-    echo "<p>Updated.</p>";
+    echo "<p>Updated.</p>";*/
 }
 
 ?>

@@ -12,20 +12,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $uname = $_POST['username'] ?? '';
     $pass = $_POST['password'] ?? '';
 
-    // Vulnerable to SQL injection (intentional)
-    //$query = "SELECT * FROM users WHERE username = '$uname' AND password = '$pass'";
-    //echo "<p>Query: $query</p>"; // Debug line
+    /* Vulnerable to SQL injection (intentional)
+    $query = "SELECT * FROM users WHERE username = '$uname' AND password = '$pass'";
+    echo "<p>Query: $query</p>"; // Debug line
+    $result = $conn->query($query);
+    */
 
-    //$result = $conn->query($query);
+    // Input validation
+    if (strlen($uname) > 100 || strlen($pass) > 100) {
+        echo "<p>Invalid input: too long.</p>";
+        exit;
+    }
 
-    // Secure query using prepared statement
+    // Prepared statement
     $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
     $stmt->bind_param("ss", $uname, $pass);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Debug output
-    echo "<p>Attempted login with: <code>$uname / $pass</code></p>";
 
     if ($result && $result->num_rows > 0) {
         echo "<p>Login successful</p>";

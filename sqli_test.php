@@ -17,10 +17,17 @@ if ($conn->connect_error) {
 // Get user input
 $id = $_GET['id'] ?? '';
 
-// Vulnerable to SQL injection
-//$query = "SELECT * FROM users WHERE id = '$id'";
-//$result = $conn->query($query);
+/*// Vulnerable to SQL injection
+$query = "SELECT * FROM users WHERE id = '$id'";
+$result = $conn->query($query);*/
 
+// Input validation
+if (!ctype_digit($id)) {
+    echo "<p>Invalid input: ID must be a number.</p>";
+    exit;
+}
+
+// Secure version
 if (!is_numeric($id)) {
     echo "<p>Invalid input</p>";
     exit;
